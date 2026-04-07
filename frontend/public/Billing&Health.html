@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Billing & Analytics | Architect Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-10 max-w-[1400px] mx-auto">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div
+            class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl relative overflow-hidden group shadow-sm border border-outline-variant/10">
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-24 -mt-24 blur-3xl group-hover:bg-primary/10 transition-colors">
+            </div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-outline mb-1">DATA VOLUME TRANSFERRED
+                        </h3>
+                        <p class="text-[0.6875rem] font-bold text-tertiary uppercase tracking-widest">Active Billing
+                            Cycle</p>
+                    </div>
+                    <div class="bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1 shadow-inner">
+                        <span class="material-symbols-outlined text-xs text-on-secondary-fixed-variant">update</span>
+                        <span class="text-[10px] font-bold text-on-secondary-fixed-variant">REAL-TIME</span>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-4 mb-4">
+                    <span class="text-7xl font-extrabold font-headline tracking-tighter text-on-surface">1.2 <span
+                            class="text-3xl text-outline-variant">TB</span></span>
+                    <div class="flex items-center text-tertiary font-bold text-sm">
+                        <span class="material-symbols-outlined text-lg">arrow_drop_up</span>
+                        14% vs last month
+                    </div>
+                </div>
+                <div
+                    class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden shadow-inner border border-black/5">
+                    <div class="h-full bg-gradient-to-r from-primary to-primary-container relative" style="width: 72%">
+                        <div class="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-3">
+                    <span class="text-xs text-outline">Tier Limit: 2.0 TB</span>
+                    <span class="text-xs font-semibold text-primary">72% Consumed</span>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="glass-3d-card p-8 rounded-2xl flex flex-col justify-between border-l-4 border-primary/50 relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+            <div class="relative z-10">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface-variant mb-6">NEXT MIGRATION
+                    PROJECTION</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-on-surface-variant/80">Estimated Load</span>
+                        <span class="font-bold">450 GB</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-on-surface-variant/80">Instance Compute</span>
+                        <span class="font-bold">Standard Opt.</span>
+                    </div>
+                    <div class="pt-4 border-t border-on-surface/5">
+                        <p class="text-xs text-on-surface-variant mb-1">Projected Cost</p>
+                        <p class="text-4xl font-extrabold text-primary tracking-tight drop-shadow-sm">$842.50</p>
+                    </div>
+                </div>
+            </div>
+            <button
+                class="w-full bg-white/40 text-primary py-3 rounded-xl font-bold text-sm border border-white/60 hover:bg-primary hover:text-white transition-all mt-6 shadow-sm active:scale-95">
+                View Config Details
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div
+            class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h3 class="text-xl font-bold text-on-surface leading-tight">Data Velocity (30 Days)</h3>
+                    <p class="text-sm text-outline mt-1">Daily throughput across all active pipelines</p>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="px-4 py-1.5 bg-surface-container-low rounded-lg text-xs font-bold text-primary shadow-sm">DAILY</button>
+                    <button
+                        class="px-4 py-1.5 rounded-lg text-xs font-bold text-outline hover:bg-surface-container-low transition-colors">WEEKLY</button>
+                </div>
+            </div>
+
+            <div class="flex items-end justify-between h-64 gap-3 px-4 column-3d-container">
+                {% for height in [30, 45, 20, 65, 50, 35, 40, 90, 60, 30, 70, 40, 25, 65] %}
+                <div class="flex-1 h-[{{ height }}%] column-3d" {% if height < 65
+                    %}style="--tw-bg-opacity-color: #dae2fd" {% endif %}>
+                    <div
+                        class="column-face column-front h-full rounded-t-sm {% if height >= 65 %}bg-primary{% else %}bg-[#dae2fd]{% endif %}">
+                    </div>
+                    <div class="column-face column-top rounded-sm {% if height < 65 %}bg-[#eef1ff]{% endif %}"></div>
+                    <div class="column-face column-right rounded-sm"></div>
+                    {% if height == 90 %}
+                    <div
+                        class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded font-bold shadow-lg z-20">
+                        84GB</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="flex justify-between mt-8 text-[10px] font-bold text-outline uppercase tracking-widest px-4">
+                <span>01 Oct</span>
+                <span>15 Oct</span>
+                <span>30 Oct</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-6">
+            <div class="bg-surface-container-low p-6 rounded-xl flex-1 border border-white/50 shadow-sm">
+                <h4 class="text-sm font-bold text-on-surface mb-4">Top Cost Sources</h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,62,199,0.5)]"></div>
+                            <span class="text-xs font-medium text-secondary">PostgreSQL Cluster A</span>
+                        </div>
+                        <span class="text-xs font-bold">$342.12</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(0,117,80,0.5)]"></div>
+                            <span class="text-xs font-medium text-secondary">AWS S3 Archival</span>
+                        </div>
+                        <span class="text-xs font-bold">$218.45</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-inverse-surface p-6 rounded-xl flex-1 text-white relative overflow-hidden depth-badge">
+                <div class="absolute inset-0 opacity-15 bg-gradient-to-br from-white to-transparent"></div>
+                <div class="relative z-10 flex flex-col h-full justify-between">
+                    <div>
+                        <div
+                            class="inline-block px-2 py-0.5 bg-white/10 rounded-md text-[9px] font-black uppercase tracking-[0.2em] mb-2 border border-white/20">
+                            Active Plan</div>
+                        <h4 class="text-xs font-bold text-inverse-primary uppercase tracking-widest mb-1">Billing Tier
+                        </h4>
+                        <p class="text-2xl font-black font-headline tracking-tight drop-shadow-lg">Enterprise Gold</p>
+                    </div>
+                    <button
+                        class="text-xs font-bold flex items-center gap-1 hover:text-inverse-primary transition-all hover:translate-x-1 mt-4">
+                        Upgrade Plan <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
+        <div class="p-8 pb-4">
+            <h3 class="text-lg font-bold text-on-surface">Recent Ledger Transactions</h3>
+        </div>
+        <table class="w-full text-left">
+            <thead class="bg-surface-container-low border-none">
+                <tr>
+                    <th class="px-8 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+                        Transaction ID</th>
+                    <th class="px-8 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+                        Resource</th>
+                    <th class="px-8 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+                        Date</th>
+                    <th
+                        class="px-8 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest text-right">
+                        Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y-0">
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer group">
+                    <td class="px-8 py-6 text-sm font-mono text-outline">TXN-94021-X</td>
+                    <td class="px-8 py-6">
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase shadow-sm">Migration-72</span>
+                            <span class="text-sm font-medium">Internal Storage</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-6 text-sm text-secondary">Oct 28, 2023</td>
+                    <td class="px-8 py-6 text-sm font-bold text-on-surface text-right">$42.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="p-4 bg-surface-container-low text-center">
+            <button class="text-xs font-bold text-primary hover:underline">Download Full Transaction History
+                (CSV)</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

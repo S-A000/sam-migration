@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="D:\python projects\data_migration_saas\frontend\public\screen.png">
+
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}ArchitectData Enterprise Suite{% endblock %}</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#003ec7",
+                        "primary-container": "#0052ff",
+                        "surface": "#faf8ff",
+                        "secondary": "#545f73",
+                        "on-surface": "#131b2e",
+                        "outline-variant": "#c3c5d9",
+                        "tertiary": "#005a3c"
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Sidebar Navigation Active State */
+        .active-link {
+            background: white !important;
+            color: #003ec7 !important;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Custom UI Features (From your images) --- */
+
+        /* 3D Isometric Effects */
+        .isometric-view {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        .isometric-icon {
+            transform: rotateX(30deg) rotateY(-30deg);
+            box-shadow: 2px 2px 0px #003ec7, 4px 4px 0px #003ec7, 6px 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 3D Glass Cards */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-3d-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transform: perspective(1000px) rotateX(2deg);
+        }
+
+        /* Billing 3D Column Chart */
+        .column-3d-container {
+            perspective: 1000px;
+        }
+
+        .column-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+
+        .column-face {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .column-front {
+            transform: translateZ(6px);
+            background: linear-gradient(to top, #003ec7, #0052ff);
+        }
+
+        .column-top {
+            height: 12px;
+            background: #4edea3;
+            transform: rotateX(90deg) translateZ(6px);
+            top: -6px;
+        }
+
+        .column-right {
+            width: 12px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            transform: rotateY(90deg) translateZ(calc(100% - 6px));
+            left: auto;
+            right: -6px;
+        }
+
+        /* Logs Terminal Styles */
+        .terminal-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        .glow-sphere {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* 3D Isometric Cubes (Logs Bottom) */
+        .isometric-cube {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(45deg);
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cube-front {
+            transform: translateZ(20px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cube-top {
+            transform: rotateX(90deg) translateZ(20px);
+        }
+
+        /* Animations */
+        @keyframes shimmer {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 40px 0;
+            }
+        }
+
+        .animate-shimmer {
+            animation: shimmer 2s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen flex">
+    <aside class="h-screen w-72 flex flex-col sticky top-0 bg-[#f2f3ff] py-8 px-6 shrink-0 border-r border-black/5">
+        <div class="mb-10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined">settings_input_component</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-black">ArchitectData</h1>
+                <p class="text-[10px] font-bold text-secondary uppercase tracking-widest">Enterprise Suite</p>
+            </div>
+        </div>
+
+        <button onclick="startNewMigration()"
+            class="w-full bg-primary text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 mb-8 shadow-lg shadow-blue-200 hover:opacity-90 transition-all active:scale-95">
+            <span class="material-symbols-outlined">add</span> New Migration
+        </button>
+
+
+        <nav class="flex-1 space-y-2">
+            <a href="/manager"
+                class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-secondary hover:text-primary transition-all {% if request.url.path == '/manager' %}active-link{% endif %}">
+                <span class="material-symbols-outlined">settings_input_component</span> Connection Manager
+            </a>
+            <a href="/monitor"
+                class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-secondary hover:text-primary transition-all {% if request.url.path == '/monitor' %}active-link{% endif %}">
+                <span class="material-symbols-outlined">monitoring</span> Migration Monitor
+            </a>
+            <a href="/logs"
+                class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-secondary hover:text-primary transition-all {% if request.url.path == '/logs' %}active-link{% endif %}">
+                <span class="material-symbols-outlined">description</span> Logs & Health Check
+            </a>
+            <a href="/billing"
+                class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-secondary hover:text-primary transition-all {% if request.url.path == '/billing' %}active-link{% endif %}">
+                <span class="material-symbols-outlined">analytics</span> Billing & Analytics
+            </a>
+        </nav>
+
+        <div class="mt-auto border-t border-black/5 pt-4 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-secondary hover:text-primary">
+                <span class="material-symbols-outlined text-[20px]">settings</span> Settings
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-secondary hover:text-primary">
+                <span class="material-symbols-outlined text-[20px]">help</span> Support
+            </a>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 bg-surface">
+        <header
+            class="h-16 sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-black/5 flex justify-between items-center px-8">
+            <div class="relative w-96">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input
+                    class="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20"
+                    placeholder="Search architecture..." type="text" />
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-all">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <div class="h-8 w-px bg-gray-100 mx-2"></div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-on-surface">Syed Abdullah</p>
+                        <p class="text-[10px] text-secondary uppercase tracking-wider font-semibold">Architect</p>
+                    </div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-primary/10 border-2 border-white shadow-sm flex items-center justify-center text-primary font-bold">
+                        SA
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-10 overflow-y-auto">
+            <div class="max-w-[1600px] mx-auto">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
+<script>
+    function startNewMigration() {
+        // 1. Check karein ke kya user waqayi sab reset karna chahta hai
+        const confirmAction = confirm("Are you sure you want to start a new migration? Any unsaved connection details will be cleared.");
+
+        if (confirmAction) {
+            // 2. Agar user 'Monitor' ya kisi aur page par hai, toh Manager par bhejein
+            // Saath hi 'reset=true' ka parameter bhej rahe hain taake fields clear ho jayein
+            window.location.href = "/manager?reset=true";
+        }
+    }
+
+    // 3. Page load hone par agar URL mein reset=true ho toh fields saaf kar dein
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('reset') === 'true') {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+            console.log("New Migration Session Started: Fields Cleared.");
+        }
+    };
+</script>

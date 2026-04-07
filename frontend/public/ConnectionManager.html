@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Connection Manager - Enterprise Suite{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl w-full mx-auto">
+    <div class="mb-10 flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl font-extrabold text-on-surface tracking-tight mb-1">Connection Manager</h2>
+            <p class="text-on-surface-variant max-w-xl">Configure secure tunnels for data migration. Ensure all regions
+                and containers are correctly mapped.</p>
+        </div>
+
+        <div class="bg-surface-container-low p-1 rounded-xl flex gap-1 border border-outline-variant/20 shadow-inner">
+            <button id="mode-push" onclick="setMigrationMode('push')"
+                class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-white text-primary shadow-sm">
+                LOCAL → CLOUD
+            </button>
+            <button id="mode-pull" onclick="setMigrationMode('pull')"
+                class="px-4 py-2 text-xs font-bold rounded-lg transition-all text-secondary hover:bg-white/50">
+                CLOUD → LOCAL
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-8 space-y-8" id="form-container">
+
+            <section
+                class="bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-outline-variant/10 relative overflow-hidden">
+                <div id="source-accent" class="absolute top-0 left-0 w-1.5 h-full bg-primary/60"></div>
+                <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary" id="source-icon">database</span>
+                    <span id="source-label">Source Configuration</span>
+                </h3>
+
+                <div id="source-fields-ui">
+                </div>
+            </section>
+
+            <section
+                class="bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-outline-variant/10 relative overflow-hidden">
+                <div id="dest-accent" class="absolute top-0 left-0 w-1.5 h-full bg-tertiary/60"></div>
+                <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-tertiary" id="dest-icon">cloud_upload</span>
+                    <span id="dest-label">Destination Target</span>
+                </h3>
+
+                <div id="dest-fields-ui">
+                </div>
+            </section>
+        </div>
+
+        <div class="lg:col-span-4 space-y-6 sticky top-24">
+            <div class="bg-surface-container rounded-2xl p-6 space-y-4 border border-outline-variant/10">
+                <button onclick="validateConfiguration()"
+                    class="w-full py-4 bg-on-surface text-surface rounded-xl font-bold flex items-center justify-center gap-3 btn-tactile">
+                    <span class="material-symbols-outlined">network_check</span> Run Full Handshake
+                </button>
+                <div id="status_msg" class="hidden p-3 rounded-lg text-[11px] font-bold"></div>
+            </div>
+
+            <div class="bg-primary p-6 rounded-2xl text-white relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h4 class="text-sm font-bold mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined">security</span> Encryption Active
+                    </h4>
+                    <p class="text-[11px] opacity-70 leading-relaxed">
+                        All credentials (AWS Keys, Azure Strings) are encrypted using AES-256 before being sent to the
+                        handshake node.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="tpl-db-fields">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <input id="db_ip" placeholder="Server IP (e.g. 10.0.0.45)"
+            class="bg-surface-container-low border-none rounded-lg p-3 text-sm depth-input" type="text" />
+        <input id="db_name" placeholder="Database Name"
+            class="bg-surface-container-low border-none rounded-lg p-3 text-sm depth-input" type="text" />
+        <input id="db_user" placeholder="Username"
+            class="bg-surface-container-low border-none rounded-lg p-3 text-sm depth-input" type="text" />
+        <input id="db_pass" placeholder="Password"
+            class="bg-surface-container-low border-none rounded-lg p-3 text-sm depth-input" type="password" />
+    </div>
+</template>
+
+<template id="tpl-cloud-fields">
+    <div class="space-y-6">
+        <select id="cloud_provider" onchange="renderCloudSubFields()"
+            class="w-full bg-surface-container-low border-none rounded-lg p-4 text-sm font-semibold depth-input">
+            <option value="" disabled selected>Select Storage Provider</option>
+            <option value="aws_s3">AWS S3 (Amazon)</option>
+            <option value="azure_blob">Azure Blob (Microsoft)</option>
+        </select>
+        <div id="dynamic_cloud_inputs"
+            class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-surface-container-low/30 rounded-xl border border-dashed border-outline-variant/30">
+        </div>
+    </div>
+</template>
+
+<script>
+    let currentMode = 'push';
+
+    function setMigrationMode(mode) {
+        currentMode = mode;
+        document.getElementById('mode-push').className = (mode === 'push') ? "px-4 py-2 text-xs font-bold rounded-lg bg-white text-primary shadow-sm" : "px-4 py-2 text-xs font-bold rounded-lg text-secondary";
+        document.getElementById('mode-pull').className = (mode === 'pull') ? "px-4 py-2 text-xs font-bold rounded-lg bg-white text-primary shadow-sm" : "px-4 py-2 text-xs font-bold rounded-lg text-secondary";
+
+        const sourceUI = document.getElementById('source-fields-ui');
+        const destUI = document.getElementById('dest-fields-ui');
+        const dbTpl = document.getElementById('tpl-db-fields').innerHTML;
+        const cloudTpl = document.getElementById('tpl-cloud-fields').innerHTML;
+
+        if (mode === 'push') {
+            document.getElementById('source-label').innerText = "Source: Local Database";
+            document.getElementById('dest-label').innerText = "Destination: Cloud Target";
+            document.getElementById('source-icon').innerText = "database";
+            document.getElementById('dest-icon').innerText = "cloud_upload";
+            sourceUI.innerHTML = dbTpl;
+            destUI.innerHTML = cloudTpl;
+        } else {
+            document.getElementById('source-label').innerText = "Source: Cloud Storage";
+            document.getElementById('dest-label').innerText = "Destination: Local Database";
+            document.getElementById('source-icon').innerText = "cloud_download";
+            document.getElementById('dest-icon').innerText = "dns";
+            sourceUI.innerHTML = cloudTpl;
+            destUI.innerHTML = dbTpl;
+        }
+    }
+
+    function renderCloudSubFields() {
+        const provider = document.getElementById('cloud_provider').value;
+        const container = document.getElementById('dynamic_cloud_inputs');
+        container.classList.remove('hidden');
+
+        if (provider === 'aws_s3') {
+            container.innerHTML = `
+                <input id="c_key" placeholder="AWS Access Key ID" class="bg-white border-none rounded-lg p-3 text-sm depth-input" type="text" />
+                <input id="c_secret" placeholder="AWS Secret Key" class="bg-white border-none rounded-lg p-3 text-sm depth-input" type="password" />
+                <input id="c_bucket" placeholder="S3 Bucket Name" class="bg-white border-none rounded-lg p-3 text-sm depth-input" type="text" />
+                <input id="c_region" placeholder="Region (e.g. us-east-1)" class="bg-white border-none rounded-lg p-3 text-sm depth-input" type="text" />
+                <input id="c_token" placeholder="Session Token (Optional)" class="bg-white border-none rounded-lg p-3 text-sm depth-input col-span-2" type="password" />
+            `;
+        } else if (provider === 'azure_blob') {
+            container.innerHTML = `
+                <input id="c_conn" placeholder="Azure Connection String" class="bg-white border-none rounded-lg p-3 text-sm depth-input col-span-2" type="password" />
+                <input id="c_container" placeholder="Container Name" class="bg-white border-none rounded-lg p-3 text-sm depth-input col-span-2" type="text" />
+            `;
+        }
+    }
+
+    async function validateConfiguration() {
+        const msg = document.getElementById('status_msg');
+        const provider = document.getElementById('cloud_provider')?.value;
+
+        // Data packing based on provider
+        const payload = {
+            mode: currentMode,
+            provider: provider,
+            ip: document.getElementById('db_ip')?.value,
+            db: document.getElementById('db_name')?.value,
+            // Cloud fields (IDs check kar lein jo renderCloudSubFields mein hain)
+            key: document.getElementById('c_key')?.value,
+            secret: document.getElementById('c_secret')?.value,
+            bucket: document.getElementById('c_bucket')?.value || document.getElementById('c_container')?.value,
+            region: document.getElementById('c_region')?.value,
+            conn_string: document.getElementById('c_conn')?.value,
+            token: document.getElementById('c_token')?.value
+        };
+
+        msg.classList.remove('hidden');
+        msg.innerText = "🔄 Validating Credentials with Cloud API...";
+        msg.className = "p-3 rounded-lg text-[11px] font-bold bg-blue-50 text-blue-600 animate-pulse";
+
+        try {
+            const response = await fetch('/api/test-connection', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.status === "success") {
+                msg.className = "p-3 rounded-lg text-[11px] font-bold bg-tertiary/10 text-tertiary border border-tertiary/20";
+                msg.innerText = "✅ " + result.message;
+            } else {
+                msg.className = "p-3 rounded-lg text-[11px] font-bold bg-red-50 text-red-600 border border-red-200";
+                msg.innerText = "❌ " + result.message;
+            }
+        } catch (error) {
+            msg.innerText = "❌ Connection Error: Backend server unreachable.";
+        }
+    }
+
+    setMigrationMode('push');
+</script>
+{% endblock %}

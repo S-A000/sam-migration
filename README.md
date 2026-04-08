@@ -110,5 +110,5 @@ On-prem aur cloud dono environments ko sync mein rakhna
 Purane servers se data ko cloud infrastructure par migrate karna
 
 ---
-![Alt text](Workable Data Bridge system diagram.png)
+![Workable Data Bridge Architecture](diagram.png)
 
